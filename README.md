@@ -1,4 +1,5 @@
 # Map the World with Sound
+![](https://i.imgur.com/P1Ip1f9.jpg)
 
 ## 分工
 
@@ -44,5 +45,10 @@ https://github.com/synthizer/synthizer
 A head related transfer function (HRTF) describes the transformation of a specific source direction
 relative to the head and filtering process associated with the diffraction of sound by
 the pinna, head and torso.
+
+
+[^_^]:
+    Mel-Frequency Cepstrum
+    
 
 
