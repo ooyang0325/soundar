@@ -1,5 +1,5 @@
 <p align ="center"><img src="https://user-images.githubusercontent.com/52309935/201679137-983ad43a-ef6c-448d-9879-88063dc8ade5.png" width=25%></p>
----
+
 # Map the World with Sound
 <p align ="center"><img src="https://i.imgur.com/P1Ip1f9.jpg" width=75%></p>
 
@@ -63,5 +63,4 @@ the pinna, head and torso.
 [^_^]:
     possible handcrafted features extraction: Mel-Frequency Cepstrum, skewness, kurtosis, log energy, entropy, zcr
     
-
 
