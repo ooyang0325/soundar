@@ -2,7 +2,7 @@
 
 <h1 align = "center">Map the World with Sound</h1>
 <p align ="center"><img src="https://i.imgur.com/P1Ip1f9.jpg" width=75%></p>
-
+<p align ="center">鎮校之寶</p>
 
 ## 分工
 
