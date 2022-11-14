@@ -1,6 +1,6 @@
 <p align ="center"><img src="https://user-images.githubusercontent.com/52309935/201679137-983ad43a-ef6c-448d-9879-88063dc8ade5.png" width=15%></p>
 
-# Map the World with Sound
+<hi align = "center">Map the World with Sound</h1>
 <p align ="center"><img src="https://i.imgur.com/P1Ip1f9.jpg" width=75%></p>
 
 
