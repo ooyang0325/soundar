@@ -19,36 +19,46 @@
 :ok_hand: 
 :banana:
 
-### input data
+## input data
 
 * Mel Spectrogram (頻譜圖)
 * Raw data
 
-### Output data
+## Output data
 
 * 座標
 * $\frac{d(座標)}{dt}$
 
-### Model
+## Model
 
 * CRNN
     * 對頻譜圖做影像辨識
 * Transformer
     * 直接把波形砸 in a nutshell
+    * 目前的資料不適用(now we are using static single waveform file instead of a series of movement)
 
 
-sound generation using: 
-https://github.com/synthizer/synthizer
+    sound generation using: 
+    https://github.com/synthizer/synthizer
 
-### HRTF 介紹
+## HRTF 介紹
 
 A head related transfer function (HRTF) describes the transformation of a specific source direction
 relative to the head and filtering process associated with the diffraction of sound by
 the pinna, head and torso.
 
+## TO-DO list
+- [x] pass the midterm(by any means) 
+- [x] generate sound waveform files
+- [x] create json file with waveform files' information
+- [ ] build the enviroment on SYSTEX's server
+- [ ] start training data
+- [ ] marry my waifu **(!!important!!)** <br><br>
+    > ooyang.waifu = {雷姆, 夕夕子, Aimyon, milet, 小松菜奈, 長澤茉里奈, 橋本環奈, 朝日奈まお, 檜山沙耶}
+
 
 [^_^]:
-    Mel-Frequency Cepstrum
+    possible handcrafted features extraction: Mel-Frequency Cepstrum, skewness, kurtosis, log energy, entropy, zcr
     
 
 
