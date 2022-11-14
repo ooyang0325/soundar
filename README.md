@@ -1,5 +1,7 @@
 # Map the World with Sound
-![](https://i.imgur.com/P1Ip1f9.jpg)
+<img src="https://i.imgur.com/7Mscmpc.jpg" width=50% style="display:block; margin:auto;"></img>
+<img src="https://i.imgur.com/P1Ip1f9.jpg" width=75% style="display:block; margin:auto;"></img>
+
 
 ## 分工
 
