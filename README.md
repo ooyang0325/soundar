@@ -1,6 +1,6 @@
 # Map the World with Sound
-<img src="https://user-images.githubusercontent.com/52309935/201679137-983ad43a-ef6c-448d-9879-88063dc8ade5.png" width=50% style="display:block; margin:auto;"></img>
-<img src="https://i.imgur.com/P1Ip1f9.jpg" width=75% style="display:block; margin:auto;"></img>
+<p align ="center"><img src="https://user-images.githubusercontent.com/52309935/201679137-983ad43a-ef6c-448d-9879-88063dc8ade5.png" width=50%></p>
+<p align ="center"><img src="https://i.imgur.com/P1Ip1f9.jpg" width=75%></p>
 
 
 ## 分工
