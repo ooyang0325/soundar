@@ -2,28 +2,35 @@ import json
 
 file_path = '../data/'
 
-f = open(file_path + 'output_1.json')
+def split_json():
 
-data = f.read().replace('}', '},')
-data = data[:-2]
+	f = open(file_path + 'output_1.json')
 
-data = '[' + data + ']'
+	data = f.read().replace('}', '},')
+	data = data[:-2]
 
-lst = eval(data)
+	data = '[' + data + ']'
 
-dic = {'x': [], 'y': [], 'filename': []}
+	lst = eval(data)
 
-for d in lst:
-	for v in d['x']:
-		dic['x'].append(v)
-	for v in d['y']:
-		dic['y'].append(v)
-	for v in d['filename']:
-		new_id = int(v[7:12])
-		dic['filename'].append('output_' + str(new_id) + '.wav')
+	dic = {'x': [], 'y': [], 'filename': []}
 
-output = open('../data/new_output.json', 'w')
-json.dump(dic, output, indent=4)
+	for d in lst:
+		for v in d['x']:
+			dic['x'].append(v)
+		for v in d['y']:
+			dic['y'].append(v)
+		for v in d['filename']:
+			new_id = int(v[7:12])
+			dic['filename'].append('output_' + str(new_id) + '.wav')
+
+	output = open('../data/new_output.json', 'w')
+	json.dump(dic, output, indent=4)
+
+	f.close()
+	output.close()
+
+
 
 
 

@@ -12,7 +12,7 @@ ax.axes.get_xaxis().set_visible(False)
 ax.axes.get_yaxis().set_visible(False)
 ax.set_frame_on(False)
 
-for i in range(7679, 10000):
+for i in range(0, 10000):
 	file_name = file_path + 'output_' + str(i) + '.wav'
 	y, sr = librosa.load(file_name)
 	S = librosa.feature.melspectrogram(y=y, sr=sr)
