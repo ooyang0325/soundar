@@ -1,8 +1,57 @@
 import json
 import pandas as pd
-from math import atan2, pi, floor
+from math import atan2, pi, floor, sqrt, ceil
 
 file_path = '../data/'
+
+def build_coordinate_mapping_table():
+	"""
+	mapping coordinate to block_id, coordinates have to be multiple of 50
+	table and dic seem to be useless, but I'd like to pretend nothing happened :/
+	"""
+	nx, ny = 0, 0
+	table = [[0 for _ in range(8)] for _ in range(8)]
+	dx = [1, -1, -1, 1]
+	dy = [1, 1, -1, -1]
+	dic = {}
+	invdic = {}
+	for i in range(4):
+		for j in range(i + 1):
+			tx = i * i + j
+			ty = i * i + 2 * i - j
+			for d in range(4):
+				if d % 2 == 0:
+					dic[tx + 16 * d] = (50 * dx[d] * (i + 1), 50 * dy[d] * (j + 1))
+					dic[ty + 16 * d] = (50 * dx[d] * (j + 1), 50 * dy[d] * (i + 1))
+					invdic[(50 * dx[d] * (i + 1), 50 * dy[d] * (j + 1))] = tx + 16 * d
+					invdic[(50 * dx[d] * (j + 1), 50 * dy[d] * (i + 1))] = ty + 16 * d
+				if d % 2 == 1:
+					dic[ty + 16 * d] = (50 * dx[d] * (i + 1), 50 * dy[d] * (j + 1))
+					dic[tx + 16 * d] = (50 * dx[d] * (j + 1), 50 * dy[d] * (i + 1))
+					invdic[(50 * dx[d] * (i + 1), 50 * dy[d] * (j + 1))] = ty + 16 * d
+					invdic[(50 * dx[d] * (j + 1), 50 * dy[d] * (i + 1))] = tx + 16 * d
+
+			# first quadrant
+			table[3 - j][4 + i] = tx
+			table[3 - i][4 + j] = ty
+			# second quadrant
+			table[3 - i][3 - j] = tx + 16
+			table[3 - j][3 - i] = ty + 16
+			# third quadrant
+			table[4 + j][3 - i] = tx + 32
+			table[4 + i][3 - j] = ty + 32
+			# fourth quadrant
+			table[4 + i][4 + j] = tx + 48
+			table[4 + j][4 + i] = ty + 48
+
+	# print(*table, sep='\n')
+
+	dic = dict(sorted(dic.items()))
+	invdic = dict(sorted(invdic.items(), key=lambda x: x[1]))
+	# print(*invdic.items(), sep='\n')
+
+	return invdic
+
 
 def split_json():
 	"""
@@ -31,20 +80,22 @@ def split_json():
 def add_coordinate():
 	"""
 	Add coordinate label to the json file.
+	Coordinate is labeled like this: https://i.imgur.com/upXuv8t.png
 	"""
-	global file_path
+
+	coord_table = build_coordinate_mapping_table()
+
 	with open(file_path + 'new_output.json') as f:
 		dic = json.load(f)
-		dic['distance'] = []
-		dic['quadrant'] = []
-		# quad = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
+		dic['block'] = []
 		for x, y, filename in zip(dic['x'], dic['y'], dic['filename']):
-			dist = (x * x + y * y) // 625 + 1
-			dic['distance'].append(dist)
-			quadrant = 0
-			degree = atan2(y, x) + (2 * pi if y < 0 else 0)
-			quadrant = floor(degree / (pi / 4)) + 1
-			dic['quadrant'].append(quadrant)
+			nx = (abs(x) // 50 + (1 if abs(x) % 50 != 0 else 0)) * (1 if x > 0 else -1) * 50
+			ny = (abs(y) // 50 + (1 if abs(y) % 50 != 0 else 0)) * (1 if y > 0 else -1) * 50
+			if nx == 0: nx = 50
+			if ny == 0: ny = 50
+			print(x, y, nx, ny)
+			block = coord_table[(nx, ny)]
+			dic['block'].append(block)
 
 		with open('../data/output_with_coordinate.json', 'w') as output:
 			json.dump(dic, output, indent=4)
@@ -54,7 +105,6 @@ def json_to_csv():
 	"""
 	Turn json file to csv file.
 	"""
-	global file_path
 	with open('../data/output_with_coordinate.json') as f:
 		json_file = json.load(f)
 		df = pd.read_json('../data/output_with_coordinate.json')
