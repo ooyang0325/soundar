@@ -108,9 +108,5 @@ def json_to_csv():
 	with open('../data/output_with_coordinate.json') as f:
 		json_file = json.load(f)
 		df = pd.read_json('../data/output_with_coordinate.json')
-		df.to_csv(file_path + 'dataset.csv')
-
-add_coordinate()
-json_to_csv()
-
+		df.to_csv(file_path + 'dataset.csv', index=False)
 
