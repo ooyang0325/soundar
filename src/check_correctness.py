@@ -1,5 +1,12 @@
 from generate_csv import build_coordinate_mapping_table as Table
+from train_model import *
+import numpy as np
 
+def test():
+	a = np.array([1, 2, 3])
+	b = np.array([5, 6, 7])
+	c = np.concatenate((a, b))
+	print(c)
 
 def coord_mapping_table():
 	"""
@@ -15,3 +22,11 @@ def coord_mapping_table():
 			if nx == 0: nx = 50
 			if ny == 0: ny = 50
 			print(x, y, dic[(nx, ny)])
+
+def train_dataset_check()
+	model = build_model()
+	train_model(model)
+
+if __name__ == '__main__':
+	train_dataset_check()
+
