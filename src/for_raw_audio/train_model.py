@@ -16,35 +16,20 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 
-def get_train_data(data_count=1500):
+def get_train_data(data_count=1000):
 	"""
 	Read the csv file.
 	data_count shouldn't be too large, since the memory won't fit. (All testcase requires 11.4 GB)
 	maybe I should take random data_count data from the whole dataset?
 	"""
-	file_path = '../data/'
+	file_path = '../../data/'
 	df = pd.read_csv(file_path + 'dataset.csv')
 	y = df['block'].to_numpy()
 
 	y = y[:data_count]
-
-	# print(y.shape)
-
-	if not os.path.exists('train_data.npy'):
-		x = np.empty(shape=(data_count, 224, 224, 3))
-		for i in frange(data_count):
-			im = file_path + 'mel_spec/' + str(i) + '.png'
-			im = Image.open(im)
-			im = np.array(im).astype('float64')
-			im /= 255
-			x[i] = im
-		np.save('train_data.npy', x)
-
-	else:
-		x = np.load('train_data.npy')
-		print('loaded file from existing file')
-
-	# print(x.shape)
+	x = np.load('audio_time_series_dataset.npy')
+	x = x[:data_count]
+	print(x.shape, y.shape)
 
 	return (x, y)
 
@@ -62,19 +47,19 @@ def train_test_split(train_data, train_labels, test_split_count=200):
 
 def build_model():
 
-	input_shape = (224, 224, 3)
-	output = 64
+	input_shape = (24576, 1) # wav length
+
+	output = 16
 	model1 = Sequential([
-		keras.layers.Conv2D(16, (2, 2), activation='relu', input_shape=input_shape),
-		keras.layers.MaxPooling2D((2, 2)),
+		keras.layers.Conv1D(32, 3, activation='relu', input_shape=input_shape),
+		keras.layers.MaxPooling1D(2),
 		# keras.layers.Dropout(0.2),
-		keras.layers.Conv2D(32, (3, 3), activation='relu'),
-		keras.layers.MaxPooling2D((2, 2)),
 		# keras.layers.Dropout(0.2),
-		keras.layers.Conv2D(64, (3, 3), activation='relu'),
+		keras.layers.Conv1D(32, 3, activation='relu'),
+		keras.layers.MaxPooling1D(2),
 		keras.layers.Flatten(),
-		keras.layers.Dense(71, activation='tanh'),
-		keras.layers.Dense(128, activation='relu'),
+		keras.layers.Dense(32, activation='tanh'),
+		keras.layers.Dense(64, activation='relu'),
 		keras.layers.Dense(output, activation='softmax')
 	])
 
@@ -88,7 +73,7 @@ def build_model():
 
 def train_model(model):
 	"""
-	Training da model
+	Training da mod2l
 	"""
 	
 	EPOCHS = 10
@@ -101,6 +86,9 @@ def train_model(model):
 
 	(new_train_data, new_train_labels), (test_data, test_labels) = train_test_split(train_data, train_labels, 300)
 	print(new_train_data.shape, new_train_labels.shape)
+	print('hoho')
+
+	new_train_data = tf.reshape(new_train_data, (700, 24576, 1))
 
 	history = model.fit(new_train_data, new_train_labels, epochs=EPOCHS, batch_size=batch_size)
 

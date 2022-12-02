@@ -8,7 +8,7 @@
 
 **楊詠翔**：
 
-:heavy_check_mark: 美工(PTT製作等)、dataset 生成、~~瑟瑟~~、吸老婆、噁男擔當 
+:heavy_check_mark: 美工(PTT製作等)、dataset 生成、~~瑟瑟~~、吸老婆、噁男擔當 🦥🦥🦥
 
 **詹挹辰**：
 
@@ -16,8 +16,7 @@
 
 **葉宥辰**：
 
-:heavy_check_mark: 研究文獻
-發電、:zap:
+:heavy_check_mark: 研究文獻、核電廠發電、:zap:
 :u5272: 
 :ok_hand: 
 :banana:
@@ -35,7 +34,7 @@
 ## Model
 
 * CRNN
-    * 對頻譜圖做影像辨識
+    * 對頻譜圖做影像辨識 (Failed) => 不同距離的頻譜圖長太像了 辨識不出來
 * Transformer
     * 直接把波形砸 in a nutshell
     * 目前的資料不適用(now we are using static single waveform file instead of a series of movement)

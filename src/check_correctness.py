@@ -3,10 +3,8 @@ from train_model import *
 import numpy as np
 
 def test():
-	a = np.array([1, 2, 3])
-	b = np.array([5, 6, 7])
-	c = np.concatenate((a, b))
-	print(c)
+	dic = Table((4, 4))
+	print(dic)
 
 def coord_mapping_table():
 	"""
@@ -23,7 +21,7 @@ def coord_mapping_table():
 			if ny == 0: ny = 50
 			print(x, y, dic[(nx, ny)])
 
-def train_dataset_check()
+def train_dataset_check():
 	model = build_model()
 	train_model(model)
 

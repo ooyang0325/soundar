@@ -4,11 +4,12 @@ from math import atan2, pi, floor, sqrt, ceil
 
 file_path = '../data/'
 
-def build_coordinate_mapping_table():
+def build_coordinate_mapping_table(count=(8, 8)):
 	"""
 	mapping coordinate to block_id, coordinates have to be multiple of 50
 	table and dic seem to be useless, but I'd like to pretend nothing happened :/
 	"""
+
 	nx, ny = 0, 0
 	table = [[0 for _ in range(8)] for _ in range(8)]
 	dx = [1, -1, -1, 1]
@@ -44,11 +45,29 @@ def build_coordinate_mapping_table():
 			table[4 + i][4 + j] = tx + 48
 			table[4 + j][4 + i] = ty + 48
 
+	
+
 	# print(*table, sep='\n')
 
 	dic = dict(sorted(dic.items()))
 	invdic = dict(sorted(invdic.items(), key=lambda x: x[1]))
-	# print(*invdic.items(), sep='\n')
+
+	if count == (4, 4):
+		tmp = []
+		for tup, v in invdic.items():
+			if v % 16 == 2:
+				invdic[tup] = v // 16 * 4
+			elif v % 16 == 10:
+				invdic[tup] = v // 16 * 4 + 1
+			elif v % 16 == 12:
+				invdic[tup] = v // 16 * 4 + 2
+			elif v % 16 == 14:
+				invdic[tup] = v // 16 * 4 + 3
+			else:
+				tmp.append(tup)
+		for v in tmp:
+			del invdic[v]
+
 
 	return invdic
 
@@ -77,23 +96,28 @@ def split_json():
 		with open('../data/new_output.json', 'w') as output:
 			json.dump(dic, output, indent=4)
 
-def add_coordinate():
+def add_coordinate(count):
 	"""
 	Add coordinate label to the json file.
 	Coordinate is labeled like this: https://i.imgur.com/upXuv8t.png
 	"""
 
-	coord_table = build_coordinate_mapping_table()
+	coord_table = build_coordinate_mapping_table((4, 4))
+	if count == (4, 4):
+		block_size = 100
+		block_size
+	else:
+		block_size = 50 
 
 	with open(file_path + 'new_output.json') as f:
 		dic = json.load(f)
 		dic['block'] = []
 		for x, y, filename in zip(dic['x'], dic['y'], dic['filename']):
-			nx = (abs(x) // 50 + (1 if abs(x) % 50 != 0 else 0)) * (1 if x > 0 else -1) * 50
-			ny = (abs(y) // 50 + (1 if abs(y) % 50 != 0 else 0)) * (1 if y > 0 else -1) * 50
-			if nx == 0: nx = 50
-			if ny == 0: ny = 50
-			print(x, y, nx, ny)
+			nx = (abs(x) // block_size + (1 if abs(x) % block_size != 0 else 0)) * (1 if x > 0 else -1) * block_size
+			ny = (abs(y) // block_size + (1 if abs(y) % block_size != 0 else 0)) * (1 if y > 0 else -1) * block_size
+			if nx == 0: nx = block_size
+			if ny == 0: ny = block_size
+			# print(x, y, nx, ny)
 			block = coord_table[(nx, ny)]
 			dic['block'].append(block)
 
