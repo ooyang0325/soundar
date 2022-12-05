@@ -4,6 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from frange import frange
 
+"""
+This file is for backup usage, the latest file is in the subfolder of this folder.
+
+"""
+
+
 file_path = '../data/output/'
 output_path = '../data/mel_spec/'
 

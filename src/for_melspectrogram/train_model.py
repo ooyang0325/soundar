@@ -118,10 +118,20 @@ def train_model(model):
 	return (model, history)
 
 def evaluate(model):
+	
+	"""
+	This is an unfinished model, since accuracy is still lower than pure guessing, evalutaion is not needed yet.
+	"""
+
 	model.predict()
 	pass
 
 def plot_history(history):
+
+	"""
+	Plot the training history.
+	(Copied from the Internet, hasn't been used yet)
+	"""
 
 	history_dict=history.history
 	loss_values=history_dict['loss']

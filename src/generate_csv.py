@@ -7,6 +7,10 @@ file_path = '../data/'
 def build_coordinate_mapping_table(count=(8, 8)):
 	"""
 	mapping coordinate to block_id, coordinates have to be multiple of 50
+
+	count refers to the coordinate table size
+	now only support 8 x 8 and 4 x 4
+
 	table and dic seem to be useless, but I'd like to pretend nothing happened :/
 	"""
 
@@ -75,6 +79,7 @@ def build_coordinate_mapping_table(count=(8, 8)):
 def split_json():
 	"""
 	Fix problem of the original json data.
+	(It's likely to be useless now)
 	"""
 	with open(file_path + 'output_1.json') as f:
 		data = f.read().replace('}', '},')
@@ -100,6 +105,9 @@ def add_coordinate(count):
 	"""
 	Add coordinate label to the json file.
 	Coordinate is labeled like this: https://i.imgur.com/upXuv8t.png
+
+	count refers to the coordinate table size
+	now only support 8 x 8 and 4 x 4
 	"""
 
 	coord_table = build_coordinate_mapping_table((4, 4))
@@ -133,4 +141,10 @@ def json_to_csv():
 		json_file = json.load(f)
 		df = pd.read_json('../data/output_with_coordinate.json')
 		df.to_csv(file_path + 'dataset.csv', index=False)
+
+if __name__ == '__main__':
+	exit()
+	add_coordinate()
+	json_to_csv()
+
 
