@@ -1,5 +1,3 @@
-import librosa
-import librosa.display
 import numpy as np
 from scipy.io import wavfile
 from frange import frange
@@ -7,8 +5,6 @@ from frange import frange
 file_path = '../../data/output/'
 output_path = '../../data/mel_spec/'
 
-wav_sample_count, _ = librosa.load(file_path + 'output_0.wav')
-wav_sample_count = len(wav_sample_count)
 # dataset = np.empty(shape=(total_data_count, wav_sample_count))
 
 def wav_to_raw_data():
@@ -39,12 +35,17 @@ def generate_dataset():
 	This function is uncompleted.
 	"""
 
-	count = 1000
-	for i in frange(count):
+	data_count = 3000
+	data_shape = wavfile.read(file_path + 'output_0.wav')[1].shape
+	dataset = np.empty(shape=(data_count, data_shape[0], 2))
+
+	for i in frange(data_count):
 		file_name = file_path + 'output_' + str(i) + '.wav'
 		sr, data = wavfile.read(file_name)
 		# data is a np array with 2 channels, 
-		wavfile.write('test_1.wav', sr, data[:, 0])
+		dataset[i] = data
+	
+	np.save('audio_sample.npy', dataset)
 
 generate_dataset()
 
