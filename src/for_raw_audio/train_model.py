@@ -11,27 +11,28 @@ from keras.models import Sequential
 from keras import layers
 print('Tensorflow loading finish ~ ٩(ˊᗜˋ*)و')
 #"""
+import random
 from time import sleep
 import pandas as pd
 import numpy as np
 from PIL import Image
 
-data_shape = (49152, 2)
+data_shape = (4410, 2) # The data has been processed to 4410 length
 
-def get_train_data(data_count=1000):
+def get_train_data(freq, data_count=1000):
     """
     Read the csv file.
-    data_count shouldn't be too large, since the memory won't fit. (All testcase requires 11.4 GB)
-    maybe I should take random data_count data from the whole dataset?
+    x is the audio data in np array, y is the block label.
     """
-    file_path = '../../data/'
-    df = pd.read_csv(file_path + 'dataset.csv')
+
+    file_path = '../../data/dataset/' + str(freq) + '/'
+    df = pd.read_csv(file_path + str(freq) + '.csv')
     y = df['block'].to_numpy()
 
     y = y[:data_count]
-    x = np.load('audio_sample.npy')
+    x = np.load(f'audio_sample_{str(freq)}.npy')
     x = x[:data_count]
-    print(x.shape, y.shape)
+    print("get train data", x.shape, y.shape)
 
     return (x, y)
 
@@ -39,7 +40,7 @@ def get_train_data(data_count=1000):
 def train_test_split(train_data, train_labels, test_split_ratio=0.2):
     """
     Split data into train and test.
-    The dataset is already random, I don't think that random is needed.
+    No random is needed.
     """
 
     test_split_count = int(len(train_data) * test_split_ratio)
@@ -50,17 +51,20 @@ def train_test_split(train_data, train_labels, test_split_ratio=0.2):
     return (new_train_data, new_train_labels), (test_data, test_labels)
 
 def build_model():
+    """
+    
+    """
 
     input_shape = data_shape # wav length
 
-    output = 16
+    output = 4
     model1 = Sequential([
         keras.layers.Conv1D(32, 3, activation='relu', input_shape=input_shape),
         keras.layers.MaxPooling1D(2),
-        keras.layers.Dropout(0.2),
+        keras.layers.Dropout(0.3),
         keras.layers.Conv1D(32, 3, activation='relu'),
         keras.layers.MaxPooling1D(2),
-        keras.layers.Dropout(0.2),
+        keras.layers.Dropout(0.3),
         keras.layers.Flatten(),
         keras.layers.Dense(32, activation='tanh'),
         keras.layers.Dense(64, activation='relu'),
@@ -75,21 +79,23 @@ def build_model():
 
     return model1
 
-def train_model(model):
+def train_model(freq, model):
     """
     Training da model
     """
     
-    EPOCHS = 10
+    EPOCHS = 20
     batch_size = None
 
     # early_stop = keras.callbacks.EarlyStopping(monitor='mean_absolute_error', patience=20)
 
-    train_data, train_labels = get_train_data()
-    print(train_data.shape, train_labels.shape)
+    # get_train_data(freq, data_count)
+    train_data, train_labels = get_train_data(freq, 3000)
+    print('train data/label shape', train_data.shape, train_labels.shape)
 
+    #train_test_split(train_data, train_labels, test_split_ratio=0.2)
     (new_train_data, new_train_labels), (test_data, test_labels) = train_test_split(train_data, train_labels)
-    print(new_train_data.shape, new_train_labels.shape, test_data.shape, test_labels.shape)
+    print('new train data/label shape', new_train_data.shape, new_train_labels.shape, test_data.shape, test_labels.shape)
 
     history = model.fit(new_train_data, new_train_labels, epochs=EPOCHS, batch_size=batch_size)
 
@@ -102,8 +108,14 @@ def train_model(model):
 
     return (model, history)
 
-def evaluate(model):
-    model.predict()
+def evaluate(freq, model):
+    x = np.load(f'audio_sample_{str(freq)}.npy')
+    print(x.shape)
+    x = np.array(random.sample(list(x), 20))
+    print(x.shape)
+    
+    prediction = model.predict(x)
+    print(prediction)
     pass
 
 def plot_history(history):
