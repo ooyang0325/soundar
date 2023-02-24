@@ -4,7 +4,7 @@ import csv
 import random
 import const_value
 import math
-from get_ITD_ILD import get_ILD, get_ITD
+from binaural_cues import get_ILD, get_ITD
 
 dataset_path = '../dataset/'
 
@@ -22,7 +22,7 @@ def get_json_data(freq):
         data = json.load(json_file)
     return data
 
-def train_test_split(train_data, train_labels, test_split_ratio=0.2):
+def train_test_split(train_data_dict, train_data, train_labels, test_split_ratio=0.2):
     """Split the dataset into train and test set.
 
     Args:
@@ -31,17 +31,20 @@ def train_test_split(train_data, train_labels, test_split_ratio=0.2):
         test_split_ratio (float, optional): split training data for validation. Defaults to 0.2.
 
     Returns:
-        (training_data, training_label), (validation_data, validation_label)
+        (training_data_dict, training_data, training_label), 
+        (validation_data_dict, validation_data, validation_label)
     """
 
     test_split_count = int(len(train_data) * test_split_ratio)
+    new_train_data_dict = train_data_dict[:-test_split_count]
     new_train_data = train_data[:-test_split_count]
     new_train_labels = train_labels[:-test_split_count]
+    test_data_dict = train_data_dict[-test_split_count:]    
     test_data = train_data[-test_split_count:]
     test_labels = train_labels[-test_split_count:]
-    return (new_train_data, new_train_labels), (test_data, test_labels)
+    return (new_train_data_dict, new_train_data, new_train_labels), (test_data_dict, test_data, test_labels)
 
-def get_random_data(freq, data_count=3900):
+def get_random_data(freq, data_count=3900, rand=True):
     """ get random data from the dataset
 
     Args:
@@ -64,7 +67,8 @@ def get_random_data(freq, data_count=3900):
             tmp[key] = data[key][i]
         full_data_list.append(tmp)
 
-    random.shuffle(full_data_list)
+    if rand:
+        random.shuffle(full_data_list)
 
     return full_data_list[:data_count]
 
@@ -79,7 +83,7 @@ def get_train_data(freq=const_value.frequency[0], data_count=3900):
         data_count (int, optional): Defaults to 3900.
 
     Returns:
-        np.array, np.array: training data, training labels 
+        list of dict, np.array, np.array: training data, training labels 
     """
     data = get_random_data(freq, data_count)
 
@@ -95,11 +99,11 @@ def get_train_data(freq=const_value.frequency[0], data_count=3900):
     train_data = np.array(train_data)
     true_label = np.array(theta)
 
-    return train_data, true_label
+    return data, train_data, true_label
 
 
 if __name__ == '__main__':
-    train_data, true_label = get_train_data(freq=const_value.frequency[0], data_count=50)
+    data_dict, train_data, true_label = get_train_data(freq=const_value.frequency[0], data_count=50)
     # print(train_data.shape, true_label.shape)
     print(train_data[:5], true_label[:5])
 

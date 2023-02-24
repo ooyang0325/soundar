@@ -15,3 +15,6 @@ def frange(*args):
 	
 	return tqdm(range(start, end, step), ascii=" ▖▘▝▗▚▞█")
 
+def iter(x):
+	return tqdm(x, ascii=" ▖▘▝▗▚▞█")
+
