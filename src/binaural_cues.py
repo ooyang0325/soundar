@@ -49,21 +49,23 @@ def Efficient_ccf(x1, x2):
 
     return ccf
 
-def another_ccf(wav_data):
-    interp = 16
+def get_single_gcc_phat(sr, wav_data):
+    wav_len = wav_data.shape[0]
+    max_delay = int(sr * 0.001)  # max delay for 1ms
 
-    total_len = len(wav_data[:, 0]) + len(wav_data[:, 1])
-    left_fft = np.fft.rfft(wav_data[:, 0], n=total_len)
-    right_fft = np.fft.rfft(wav_data[:, 1], n=total_len)
-    r = left_fft * np.conj(right_fft)
+    ccf_full = Efficient_ccf(wav_data[:, 0], wav_data[:, 1])
+    ccf = ccf_full[wav_len - 1 - max_delay : wav_len + max_delay]
 
-    cross_correlation = np.fft.irfft(r / np.abs(r), n=(total_len * interp))
-    max_shift = int(interp * total_len / 2)
-    cross_correlation = np.concatenate(
-        (cross_correlation[-max_shift:], cross_correlation[: max_shift + 1])
-    )
-    return cross_correlation
+    ccf_std = ccf / (np.sqrt(np.sum(wav_data[:, 0] ** 2)) * np.sqrt(np.sum(wav_data[:, 1] ** 2)))
+    max_pos = np.argmax(ccf)
 
+    delta = 0
+    if max_pos > 0 and max_pos < 2 * max_delay:
+        delta = 0.5 * (ccf[max_pos - 1] - ccf[max_pos + 1]) / (ccf[max_pos + 1] - 2 * ccf[max_pos] + ccf[max_pos - 1])
+
+    ITD = float(max_pos + delta - max_delay - 1) / sr
+
+    return ITD
 
 def gcc_phat(dataset_path, dataset):
 
@@ -73,30 +75,12 @@ def gcc_phat(dataset_path, dataset):
         filename = data["filename"]
         sr, wav_readonly_data = wavfile.read(dataset_path + filename)
         wav_data = wav_readonly_data / 32767
-        wav_len = wav_data.shape[0]
-        max_delay = int(sr * 0.001)  # max delay for 1ms
-
-
-        o = 2
-        if o == 1:
-            ccf_full = Efficient_ccf(wav_data[:, 0], wav_data[:, 1])
-        elif o == 2:
-            ccf_full = np.correlate(wav_data[:, 0], wav_data[:, 1], mode="full")
-        elif o == 3:
-            ccf_full = another_ccf(wav_data)
-        ccf = ccf_full[wav_len - 1 - max_delay : wav_len + max_delay]
-
-        ccf_std = ccf / (np.sqrt(np.sum(wav_data[:, 0] ** 2)) * np.sqrt(np.sum(wav_data[:, 1] ** 2)))
-        max_pos = np.argmax(ccf)
-
-        delta = 0
-        if max_pos > 0 and max_pos < 2 * max_delay:
-            delta = 0.5 * (ccf[max_pos - 1] - ccf[max_pos + 1]) / (ccf[max_pos + 1] - 2 * ccf[max_pos] + ccf[max_pos - 1])
-
-        ITD = float(max_pos + delta - max_delay - 1) / sr * 1000
+        
+        ITD = get_single_gcc_phat(sr, wav_data)
         ITD_list.append(ITD)
 
     print(ITD_list[:5])
+    ITD_list = np.array(ITD_list)
 
     return ITD_list
 
@@ -175,6 +159,7 @@ def get_ILD(dataset_path, dataset):
         ILD_list.append(ILD)
 
     # print(f"ILD {ILD_list[:5]}")
+    ILD_list = np.array(ILD_list)
 
     return ILD_list
 
@@ -216,6 +201,33 @@ def get_ITD(dataset_path, dataset):
     """
 
     return gcc_phat(dataset_path, dataset)
+
+def get_rms_energy(dataset_path, dataset):
+    """get rms energy of data
+
+    Args:
+        data (array of float): data
+
+    Returns:
+        float: rms energy of data
+    """
+
+    print("get rms energy")
+
+    rms_energy_list = []
+
+    for data in iter(dataset):
+        filename = data["filename"]
+        sr, wav_readonly_data = wavfile.read(dataset_path + filename)
+        wav_data = wav_readonly_data / 32767
+
+        rms_energy = np.mean(wav_data ** 2)
+        rms_energy = 10 * np.log10(rms_energy)
+        rms_energy_list.append(rms_energy)
+
+    rms_energy_list = np.array(rms_energy_list)
+
+    return rms_energy_list
 
 
 if __name__ == "__main__":

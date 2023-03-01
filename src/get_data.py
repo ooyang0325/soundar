@@ -4,11 +4,11 @@ import csv
 import random
 import const_value
 import math
-from binaural_cues import get_ILD, get_ITD
+from binaural_cues import get_ILD, get_ITD, get_rms_energy
 
-dataset_path = '../dataset/'
+# dataset_path = '../dataset/'
 
-def get_json_data(freq):
+def get_json_data(dataset_path, freq):
     """ load json file
 
     Args:
@@ -44,7 +44,7 @@ def train_test_split(train_data_dict, train_data, train_labels, test_split_ratio
     test_labels = train_labels[-test_split_count:]
     return (new_train_data_dict, new_train_data, new_train_labels), (test_data_dict, test_data, test_labels)
 
-def get_random_data(freq, data_count=3900, rand=True):
+def get_random_data(dataset_path, freq, data_count=3900, rand=True):
     """ get random data from the dataset
 
     Args:
@@ -56,7 +56,7 @@ def get_random_data(freq, data_count=3900, rand=True):
     """
 
 
-    data = get_json_data(freq)
+    data = get_json_data(dataset_path, freq)
 
     total_count = len(data['x'])
     full_data_list = []
@@ -72,7 +72,7 @@ def get_random_data(freq, data_count=3900, rand=True):
 
     return full_data_list[:data_count]
 
-def get_train_data(freq=const_value.frequency[0], data_count=3900):
+def get_train_data(dataset_path, freq=const_value.frequency[0], data_count=3900):
     """ get training data and labels
 
     New features to be added:
@@ -85,16 +85,24 @@ def get_train_data(freq=const_value.frequency[0], data_count=3900):
     Returns:
         list of dict, np.array, np.array: training data, training labels 
     """
-    data = get_random_data(freq, data_count)
+    data = get_random_data(dataset_path, freq, data_count)
 
     ILD_list = get_ILD(dataset_path + f'{freq}_delay/', data)
     ITD_list = get_ITD(dataset_path + f'{freq}_delay/', data)
+    rms_energy_list = get_rms_energy(dataset_path + f'{freq}_delay/', data)
+    ILD_list /= np.max(ILD_list)
+    ITD_list /= np.max(ITD_list)
+
     train_data = []
     theta = []
 
     for i, d in enumerate(data):
         train_data.append([ILD_list[i], ITD_list[i]])
         theta.append(d['theta'])
+
+        data[i]['ILD'] = ILD_list[i]
+        data[i]['ITD'] = ITD_list[i]
+        data[i]['rms_energy'] = rms_energy_list[i]
 
     train_data = np.array(train_data)
     true_label = np.array(theta)
