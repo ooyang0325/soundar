@@ -33,7 +33,7 @@ def DOA_train_gmm_model(dataset_path, freq):
     train_data = []
     train_label = []
 
-    if True:
+    if False:
         for freq in const_value.frequency:
             a, b, c = get_train_data(dataset_path=dataset_path, freq=freq, data_count=10)
             data_dict.extend(a)
@@ -44,8 +44,8 @@ def DOA_train_gmm_model(dataset_path, freq):
         train_data = np.array(train_data)
         train_label = np.array(train_label)
 
-    if False:
-        data_dict, train_data, train_label = get_train_data(dataset_path=dataset_path, freq=freq, data_count=500)
+    if True:
+        data_dict, train_data, train_label = get_train_data(dataset_path=dataset_path, freq=freq, data_count=300)
 
     # print(data_dict)
     # print(train_data.shape, true_label.shape)
@@ -84,7 +84,7 @@ def DOA_train_gmm_model(dataset_path, freq):
 
     plt.show()
 
-    # print(DOA_gmm_evaluate(train_label, output_label))
+    print(DOA_gmm_evaluate(train_label, output_label))
 
     return (train_data_dict, train_x, train_label), (validation_data_dict, validation_x, validation_label)
 
@@ -99,21 +99,22 @@ def DOA_gmm_evaluate(true_label, output_label):
         _type_: _description_
     """
 
-    label_count = np.zeros((13, 13))
+    label_count = np.zeros((37, 37))
     dic = {}
 
     print(true_label[:5], output_label[:5])
 
     data_count = len(true_label)
-    print('data_count: ', data_count)
+    # print('data_count: ', data_count)
     for i in range(data_count):
-        label_count[true_label[i] // 15][output_label[i]] += 1
-    for i in range(13):
-        dic[i * 15] = np.argmax(label_count[i])
-        print(label_count[i])
+        label_count[true_label[i] // 5][output_label[i]] += 1
+    for i in range(37):
+        dic[np.argmax(label_count[i])] = i
+        # print(label_count[i])
+
     print(dic)
 
-    return "Accuracy: " + str(sum([x == y for x, y in zip(true_label, output_label)]) / len(true_label))
+    return "Accuracy: " + str(sum([x // 5 == dic[y] for x, y in zip(true_label, output_label)]) / len(true_label))
 
 def DOA_build_CNN_model():
 
@@ -282,15 +283,15 @@ def train_model(dataset_path=const_value.dataset_path[1], freq=const_value.frequ
 
 
 if __name__ == '__main__':
-    # _, _ \
-    #     = DOA_train_gmm_model(dataset_path=const_value.dataset_path[1], freq=const_value.frequency[3])
+    _, _ \
+        = DOA_train_gmm_model(dataset_path=const_value.dataset_path[1], freq=const_value.frequency[3])
 
     # model = DOA_build_CNN_model()
     # (train_data, train_label), (validation_data, validation_label), model = DOA_train_CNN_model(dataset_path=const_value.dataset_path[1], freq=const_value.frequency[4], model=model)
 
     # coordinate_train_coordinate_model(freq=const_value.frequency[4])
 
-    model, regr = train_model(dataset_path=const_value.dataset_path[1], freq=const_value.frequency[3])
+    # model, regr = train_model(dataset_path=const_value.dataset_path[1], freq=const_value.frequency[3])
 
     # data = const_value.dataset_path[1]
     # x, y = predict_coordinate(data, model, regr)
