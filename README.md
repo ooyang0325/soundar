@@ -1,65 +1,65 @@
 <p align ="center"><img src="https://user-images.githubusercontent.com/52309935/201679137-983ad43a-ef6c-448d-9879-88063dc8ade5.png" width=15%></p>
+<h1 align="center"> Soundar - Map the World with Sound</h1>
 
-<h1 align = "center">Map the World with Sound</h1>
-<p align ="center"><img src="https://i.imgur.com/P1Ip1f9.jpg" width=75%></p>
-<p align ="center">鎮校之寶</p>
-
-## 分工
-
-**楊詠翔**：
-
-:heavy_check_mark: 美工(PTT製作等)、dataset 生成、~~瑟瑟~~、吸老婆、噁男擔當 🦥🦥🦥
-
-**詹挹辰**：
-
-:heavy_check_mark: 研究文獻、Model Training
-
-**葉宥辰**：
-
-:heavy_check_mark: 研究文獻、核電廠發電、:zap:
-:u5272: 
-:ok_hand: 
-:banana:
-
-## input data
-
-* Mel Spectrogram (頻譜圖)
-* Raw data
-
-## Output data
-
-* 座標
-* $\frac{d(座標)}{dt}$
-
-## Model
-
-* CRNN
-    * 對頻譜圖做影像辨識 (Failed) => 不同距離的頻譜圖長太像了 辨識不出來
-* Transformer
-    * 直接把波形砸 in a nutshell
-    * 目前的資料不適用(now we are using static single waveform file instead of a series of movement)
+使用 MLP, Polynomial Regression Model 等多種模型進行 DOA (音源方位角度) 的預測，並且使用 Lasso Regression Model 進行距離的預測。
 
 
-    sound generation using: 
-    https://github.com/synthizer/synthizer
+## 專題特色
+1. 雙聲道定位模式，取代以往使用多麥克風陣列定位方式
+2. 更容易應用於貼身裝置(耳機、助聽器等)
+3. 預測角度的準確率高
+​
+## Application
+1. **協助失聰人士注意潛在的突發威脅**
+2. 在自動化產線中輔助偵測機械故障
+3. 仿生機器人/機器動物的聽覺系統
+4. 應用於保全系統中提供更完善的監控能力
+​
+## Dataset
+* 總共使用六種音源所生成的 dataset: sin wave of 130.81, 261.63, 1046.5, ambulance noice, gunshot, fart
+* 每個 dataset 的形式
+    * $R=1\sim 30$, 公差 $0.5$
+    * $degree=0,5,10,15,\cdots,175,180$
+​
+## 機器學習模型
 
-## HRTF 介紹
+### DOA 預測
 
-A head related transfer function (HRTF) describes the transformation of a specific source direction
-relative to the head and filtering process associated with the diffraction of sound by
-the pinna, head and torso.
+* Feature: ITD, ILD
+* Ouput: DOA
+* 選用模型：MLP, Polynomial Regression, GMM(用於檢驗)
 
-## TO-DO list
-- [x] pass the midterm(by any means) 
-- [x] generate sound waveform files
-- [x] create json file with waveform files' information
-- [ ] build the enviroment on SYSTEX's server
-- [ ] start training data
-- [ ] marry my waifu **(!!important!!)** <br><br>
-    > ooyang.waifu = {雷姆, 夕夕子, Aimyon, milet, 小松菜奈, 長澤茉里奈, 橋本環奈, 朝日奈まお, 檜山沙耶}
+### 距離預測
 
+* Feature: DOA, ITD, ILD, 方均根能量
+* Output: R (距離)
+* 選用模型：lasso
 
-[^_^]:
-    possible handcrafted features extraction: Mel-Frequency Cepstrum, skewness, kurtosis, log energy, entropy, zcr
-    
+<p align="center">
+<img src="https://i.imgur.com/zOJPF6U.png" width=60%>
+<br>
+ITD, ILD 數據分佈圖，不同顏色為不同角度
+</p>
 
+## Result
+
+<p align="center">
+<img src="https://i.imgur.com/S2SsPU7.jpg" width=60%>
+<br>
+MLP 預測 DOA 結果展現
+</p>
+
+<br>
+
+<p align="center">
+<img src="https://i.imgur.com/Ad7ui76.jpg" width=60%>
+<br>
+Polynomial Regression 預測 DOA 結果展現
+</p>
+<br>
+
+<p align="center">
+<img src="https://i.imgur.com/g2Rnc1u.jpg" width=60%>
+<br>
+直角坐標預測結果
+</p>
