@@ -1,7 +1,7 @@
 <p align ="center"><img src="https://user-images.githubusercontent.com/52309935/201679137-983ad43a-ef6c-448d-9879-88063dc8ade5.png" width=15%></p>
 <h1 align="center"> Soundar - Map the World with Sound</h1>
 
-We use MLP, Polynomial Regression Model to predict DOA (Direction of Arrival) of binaural audio tracks, and use Lasso Regression Model to predict the distance of audio source.
+This machine learning project predicts the Direction of Arrival (DOA) and distance of sound sources using stereo (binaural) audio generated with Head-Related Transfer Functions (HRTF).
 
 ## Features
 
@@ -23,12 +23,28 @@ The dataset consists of six types of sound sources: sine waves (130.81 Hz, 261.6
 * Dataset format:
   * Position (x, y): Sound source cartesian coordinates.
   * Audio (stereo): Two-channel recording (left and right ear) at the listener's position (0,0).
-​
+
+## Data Analysis
+
+To analyze the audio tracks, we extracted the following features:
+- ITD (Interaural Time Difference)
+- ILD (Interaural Level Difference)
+- RMS Energy
+
+The figure below visualizes the data distribution of ITD and ILD. Different colors represent different sound source angles.
+
+<p align="center">
+ <img src="https://i.imgur.com/zOJPF6U.png" width="60%">
+ <br> X-axis: ITD | Y-axis: ILD
+ <br> Left plot: Ambulance dataset | Right plot: Combined data from all six datasets
+</p>
+
+
 ## ML Models
 
 ### DOA (Direction of Arrival) Prediction
 
-* Features: ITD (Interaural Time Difference), ILD (Interaural Level Difference)
+* Features: ITD, ILD, RMS Energy
 * Output: DOA (incoming sound angle)
 * Selected Models: MLP (classification), Polynomial Regression
 
@@ -38,11 +54,6 @@ The dataset consists of six types of sound sources: sine waves (130.81 Hz, 261.6
 * Output: R (distance)
 * Selected Model：Lasso Regression Model (L1 regularization)
 
-<p align="center">
-<img src="https://i.imgur.com/zOJPF6U.png" width=60%>
-<br>
-ITD and ILD data distribution, different colors represent different angles.
-</p>
 
 ## Results
 
@@ -64,5 +75,5 @@ Polynomial regression results for DOA.
 <p align="center">
 <img src="https://i.imgur.com/g2Rnc1u.jpg" width=60%>
 <br>
-Lasso regression results for Cartesian coordinate.
+MAE of Cartesian coordinate (calculated by predicted DOA and distance).
 </p>
