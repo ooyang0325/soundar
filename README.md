@@ -18,29 +18,30 @@ We use MLP, Polynomial Regression Model to predict DOA (Direction of Arrival) of
 ​
 ## Dataset
 
-& The dataset consists of six types of sound sources: sine wave of 130.81, 261.63, 1046.5, ambulance noise, gunshot, fart
-* Each dataset format:
-   * $R=1\sim 30$, with a tolerance of $0.5$
-   * $degree=0,5,10,15,\cdots,175,180$
+The dataset consists of six types of sound sources: sine waves (130.81 Hz, 261.63 Hz, 1046.5 Hz), ambulance noise, gunshot, fart. Dataset is generated with [synthizer](https://github.com/synthizer/synthizer).
+
+* Dataset format:
+  * Position (x, y): Sound source cartesian coordinates.
+  * Audio (stereo): Two-channel recording (left and right ear) at the listener's position (0,0).
 ​
 ## ML Models
 
-### DOA Prediction
+### DOA (Direction of Arrival) Prediction
 
-* Features: ITD, ILD
-* Ouput: DOA
-* Selected Models: MLP, Polynomial Regression, GMM (for validation)
+* Features: ITD (Interaural Time Difference), ILD (Interaural Level Difference)
+* Output: DOA (incoming sound angle)
+* Selected Models: MLP (classification), Polynomial Regression
 
 ### Distance Prediction
 
 * Feature: DOA, ITD, ILD, RMS Energy
 * Output: R (distance)
-* Selected Model：Lasso Regression Model
+* Selected Model：Lasso Regression Model (L1 regularization)
 
 <p align="center">
 <img src="https://i.imgur.com/zOJPF6U.png" width=60%>
 <br>
-ITD and ILD data distribution, different colors represent different angles
+ITD and ILD data distribution, different colors represent different angles.
 </p>
 
 ## Results
@@ -48,7 +49,7 @@ ITD and ILD data distribution, different colors represent different angles
 <p align="center">
 <img src="https://i.imgur.com/S2SsPU7.jpg" width=60%>
 <br>
-MLP prediction results for DOA
+MLP classification results for DOA.
 </p>
 
 <br>
@@ -56,12 +57,12 @@ MLP prediction results for DOA
 <p align="center">
 <img src="https://i.imgur.com/Ad7ui76.jpg" width=60%>
 <br>
-Polynomial Regression prediction results for DOA
+Polynomial regression results for DOA.
 </p>
 <br>
 
 <p align="center">
 <img src="https://i.imgur.com/g2Rnc1u.jpg" width=60%>
 <br>
-Cartesian coordinate prediction results
+Lasso regression results for Cartesian coordinate.
 </p>
